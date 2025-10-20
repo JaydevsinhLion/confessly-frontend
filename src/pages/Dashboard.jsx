@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import API from "../api";
 
 export default function Dashboard() {
@@ -9,20 +8,8 @@ export default function Dashboard() {
   const [admins, setAdmins] = useState([]);
   const [health, setHealth] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
-    const token = localStorage.getItem("token");
-
-    if (!token) {
-      setIsLoggedIn(false);
-      setLoading(false);
-      return;
-    }
-
-    setIsLoggedIn(true);
-
     Promise.all([
       API.get("/dashboard"),
       API.get("/feedback"),
@@ -37,14 +24,10 @@ export default function Dashboard() {
         setAdmins(admRes.data.data || []);
         setHealth(healthRes.data.data || null);
       })
-      .catch((err) => {
-        console.error("Dashboard load error:", err);
-        setIsLoggedIn(false);
-      })
+      .catch((err) => console.error("Dashboard load error:", err))
       .finally(() => setLoading(false));
   }, []);
 
-  // 🌙 Loader
   if (loading)
     return (
       <div className="flex items-center justify-center min-h-screen bg-[#0A1A3C] text-white">
@@ -54,67 +37,22 @@ export default function Dashboard() {
       </div>
     );
 
-  // 🟡 If not logged in → Welcome page
-  if (!isLoggedIn) {
-    return (
-      <section className="min-h-screen flex flex-col items-center justify-center bg-gradient-confessly text-white px-6 text-center">
-        <div className="max-w-lg p-10 rounded-2xl shadow-gold border border-[#D4AF37] bg-[#051225]">
-          <h1 className="text-4xl font-display text-gold mb-4">
-            Confessly Admin Panel
-          </h1>
-          <p className="text-textSecondary mb-8 font-body">
-            Your command center for managing confessions, feedback, and reports.
-            <br />
-            Register your first admin or log in to continue.
-          </p>
-
-          <div className="flex flex-col sm:flex-row justify-center gap-4">
-            <button
-              onClick={() => navigate("/admin/register")}
-              className="px-6 py-2 bg-[#D4AF37] text-[#051225] font-semibold rounded hover:bg-[#f5d77a] transition-all duration-300 shadow-glow"
-            >
-              Register New Admin
-            </button>
-            <button
-              onClick={() => navigate("/admin/login")}
-              className="px-6 py-2 bg-transparent border border-[#D4AF37] text-[#D4AF37] font-semibold rounded hover:bg-[#D4AF37] hover:text-[#051225] transition-all duration-300"
-            >
-              Login
-            </button>
-          </div>
-        </div>
-
-        <footer className="mt-12 text-sm text-textSecondary">
-          © {new Date().getFullYear()} Confessly Admin. Built by Jaydevsinh Gohil.
-        </footer>
-      </section>
-    );
-  }
-
-  // 🧭 Logged-in Dashboard (Homepage Mode)
   return (
     <div className="min-h-screen bg-gradient-confessly text-white flex flex-col">
       {/* 🌟 Hero Section */}
       <header className="text-center py-16 border-b border-[#D4AF37]/30 bg-[#0A1A3C]">
         <h1 className="text-5xl font-display text-gold mb-3">Confessly Admin Dashboard</h1>
         <p className="text-textSecondary max-w-2xl mx-auto font-body">
-          Insight meets control — view analytics, manage confessions, and keep your system running flawlessly.
+          The heart of Confessly — a space to monitor activity, insights, and growth.
         </p>
-        <button
-          onClick={() => {
-            localStorage.removeItem("token");
-            navigate("/admin/login");
-          }}
-          className="mt-8 px-6 py-2 bg-transparent border border-[#D4AF37] text-[#D4AF37] rounded hover:bg-[#D4AF37] hover:text-[#051225] transition-all duration-300"
-        >
-          Logout
-        </button>
       </header>
 
       {/* 📊 Key Statistics */}
       {data && (
         <section className="px-8 py-16">
-          <h2 className="text-3xl font-display text-gold mb-8 text-center">System Overview</h2>
+          <h2 className="text-3xl font-display text-gold mb-8 text-center">
+            System Overview
+          </h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             {Object.entries(data.stats).map(([key, value]) => (
               <div
