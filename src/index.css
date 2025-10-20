@@ -1,0 +1,32 @@
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700&family=Inter:wght@400;500;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ================================
+   🌒 CONFESSLY BRAND STYLES
+   ================================ */
+
+body {
+  @apply bg-gradient-confessly text-textPrimary font-body;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100vh;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  @apply font-display text-textPrimary;
+}
+
+a {
+  @apply text-gold hover:text-rose transition-all duration-300;
+}
+
+button {
+  @apply bg-gold text-dark px-4 py-2 rounded-lg font-semibold hover:shadow-glow hover:bg-rose hover:text-white transition duration-300;
+}
+
+.card {
+  @apply bg-surface rounded-xl shadow-soft p-6 border border-slate/20;
+}
